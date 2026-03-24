@@ -1,0 +1,39 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+
+# -------------------------
+# Step 1: Create Weather Dataset
+# -------------------------
+data = pd.DataFrame({
+    'Outlook': ['Sunny', 'Sunny', 'Overcast', 'Rain', 'Rain'],
+    'Temperature': ['Hot', 'Hot', 'Hot', 'Mild', 'Cool'],
+    'Humidity': ['High', 'High', 'High', 'High', 'Normal'],
+    'Wind': ['Weak', 'Strong', 'Weak', 'Weak', 'Strong'],
+    'Play': ['No', 'No', 'Yes', 'Yes', 'Yes']
+})
+
+print("Original Data:\n", data)
+
+# -------------------------
+# Step 2: Check Missing Values
+# -------------------------
+print("\nMissing Values:\n", data.isnull().sum())
+
+# -------------------------
+# Step 3: Encode Categorical Data
+# -------------------------
+le = LabelEncoder()
+
+for col in data.columns:
+    data[col] = le.fit_transform(data[col])
+
+print("\nEncoded Data:\n", data)
+
+# -------------------------
+# Step 4: Feature & Target Split
+# -------------------------
+X = data.drop('Play', axis=1)   # Features
+y = data['Play']                # Target
+
+print("\nFeatures:\n", X)
+print("\nTarget:\n", y)
