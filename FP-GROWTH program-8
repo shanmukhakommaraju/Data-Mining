@@ -1,0 +1,50 @@
+# 08_fpgrowth_detailed.py
+
+"""
+FP-Growth Algorithm:
+- Used for Frequent Pattern Mining
+- Faster than Apriori (no candidate generation)
+- Uses FP-Tree structure
+
+Steps:
+1. Prepare Transaction Data
+2. Convert to Boolean Format
+3. Generate Frequent Patterns using FP-Growth
+4. Generate Association Rules
+"""
+
+import pandas as pd
+from mlxtend.frequent_patterns import fpgrowth, association_rules
+
+# Step 1: Create Dataset (Transactions)
+data = pd.DataFrame({
+    'Milk':   [1, 1, 0, 1, 1, 0, 1],
+    'Bread':  [1, 1, 1, 0, 1, 1, 1],
+    'Butter': [0, 1, 1, 1, 1, 0, 1],
+    'Cheese': [1, 0, 1, 1, 1, 1, 0]
+})
+
+print("Original Transaction Data:\n")
+print(data)
+
+# Step 2: Convert to Boolean (True/False)
+data = data.astype(bool)
+
+print("\nBoolean Format Data:\n")
+print(data)
+
+# Step 3: Generate Frequent Itemsets using FP-Growth
+frequent_patterns = fpgrowth(data, min_support=0.4, use_colnames=True)
+
+print("\nFrequent Patterns:\n")
+print(frequent_patterns)
+
+# Step 4: Generate Association Rules
+rules = association_rules(frequent_patterns, metric="confidence", min_threshold=0.7)
+
+print("\nAssociation Rules:\n")
+print(rules)
+
+# Step 5: Display Important Metrics
+print("\nSelected Rule Metrics:\n")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
