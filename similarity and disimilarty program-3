@@ -1,0 +1,46 @@
+import pandas as pd
+import numpy as np
+from scipy.spatial.distance import euclidean, cityblock
+from sklearn.metrics.pairwise import cosine_similarity
+
+# -------------------------
+# Step 1: Create Dataset
+# -------------------------
+data = pd.DataFrame({
+    'A': [10, 20, 30, 40, 50],
+    'B': [5, 15, 25, 35, 45],
+    'C': [2, 4, 6, 8, 10]
+})
+
+print("Dataset:\n", data)
+
+# -------------------------
+# Step 2: Statistical Description
+# -------------------------
+print("\nMean:\n", data.mean())
+print("\nMedian:\n", data.median())
+print("\nStandard Deviation:\n", data.std())
+print("\nVariance:\n", data.var())
+print("\nSummary:\n", data.describe())
+
+# -------------------------
+# Step 3: Similarity & Dissimilarity
+# -------------------------
+
+# Take two rows for comparison
+x = data.iloc[0]
+y = data.iloc[1]
+
+# Euclidean Distance
+eu_dist = euclidean(x, y)
+
+# Manhattan Distance
+man_dist = cityblock(x, y)
+
+# Cosine Similarity
+cos_sim = cosine_similarity([x], [y])
+
+print("\n--- Similarity & Dissimilarity ---")
+print("Euclidean Distance:", eu_dist)
+print("Manhattan Distance:", man_dist)
+print("Cosine Similarity:", cos_sim[0][0])
