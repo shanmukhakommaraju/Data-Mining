@@ -1,0 +1,75 @@
+import pandas as pd
+import math
+
+# -------------------------
+# Step 1: Create Dataset
+# -------------------------
+data = pd.DataFrame({
+    'Outlook': ['Sunny', 'Sunny', 'Overcast', 'Rain', 'Rain'],
+    'Temp': ['Hot', 'Hot', 'Hot', 'Mild', 'Cool'],
+    'Humidity': ['High', 'High', 'High', 'High', 'Normal'],
+    'Wind': ['Weak', 'Strong', 'Weak', 'Weak', 'Strong'],
+    'Play': ['No', 'No', 'Yes', 'Yes', 'Yes']
+})
+
+# -------------------------
+# Step 2: Entropy Function
+# -------------------------
+def entropy(target):
+    values = target.value_counts()
+    total = len(target)
+    ent = 0
+    for v in values:
+        p = v / total
+        ent -= p * math.log2(p)
+    return ent
+
+# -------------------------
+# Step 3: Information Gain
+# -------------------------
+def info_gain(data, attr, target):
+    total_entropy = entropy(data[target])
+    values = data[attr].unique()
+    
+    weighted_entropy = 0
+    for v in values:
+        subset = data[data[attr] == v]
+        weight = len(subset) / len(data)
+        weighted_entropy += weight * entropy(subset[target])
+    
+    return total_entropy - weighted_entropy
+
+# -------------------------
+# Step 4: Find Best Attribute
+# -------------------------
+def best_attribute(data, target):
+    gains = {}
+    for col in data.columns:
+        if col != target:
+            gains[col] = info_gain(data, col, target)
+    
+    return max(gains, key=gains.get)
+
+# -------------------------
+# Step 5: Build Tree (Simple)
+# -------------------------
+def id3(data, target):
+    # If all values same
+    if len(data[target].unique()) == 1:
+        return data[target].iloc[0]
+    
+    best = best_attribute(data, target)
+    tree = {best: {}}
+    
+    for value in data[best].unique():
+        subset = data[data[best] == value]
+        tree[best][value] = id3(subset.drop(columns=[best]), target)
+    
+    return tree
+
+# -------------------------
+# Run ID3
+# -------------------------
+tree = id3(data, 'Play')
+
+print("Decision Tree:\n", tree)
