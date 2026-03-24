@@ -1,0 +1,51 @@
+# KDD Process Implementation using Python
+
+# Step 1: Import libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder, StandardScaler
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.cluster import KMeans
+from sklearn.metrics import accuracy_score
+
+# Step 2: Load dataset (example: Iris dataset)
+from sklearn.datasets import load_iris
+data = load_iris()
+
+# Convert to DataFrame
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['target'] = data.target
+
+print("Dataset:\n", df.head())
+
+# Step 3: Data Preprocessing
+# Check missing values
+print("\nMissing Values:\n", df.isnull().sum())
+
+# Feature scaling
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(df.iloc[:, :-1])
+
+# Step 4: Classification (Decision Tree)
+X = X_scaled
+y = df['target']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+
+print("\nClassification Accuracy:", accuracy_score(y_test, y_pred))
+
+# Step 5: Clustering (K-Means)
+kmeans = KMeans(n_clusters=3)
+kmeans.fit(X_scaled)
+
+df['cluster'] = kmeans.labels_
+
+print("\nClustered Data:\n", df.head())
+
+# Step 6: Interpretation
+print("\nCluster Centers:\n", kmeans.cluster_centers_)
