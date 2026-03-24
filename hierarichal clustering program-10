@@ -1,0 +1,47 @@
+# 10_hierarchical_clustering_detailed.py
+
+"""
+Hierarchical Clustering:
+- Unsupervised Learning Algorithm
+- Builds a hierarchy of clusters
+
+Types:
+1. Agglomerative (Bottom-Up)
+2. Divisive (Top-Down)
+
+Steps (Agglomerative):
+1. Treat each data point as a cluster
+2. Merge closest clusters
+3. Repeat until one cluster remains
+"""
+
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+# Step 1: Create Dataset
+data = pd.DataFrame({
+    'X': [1, 2, 3, 10, 11, 12, 25, 26, 27],
+    'Y': [1, 2, 3, 10, 11, 12, 25, 26, 27]
+})
+
+print("Original Data:\n")
+print(data)
+
+# Step 2: Plot Original Data
+plt.scatter(data['X'], data['Y'])
+plt.title("Original Data Points")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+
+# Step 3: Apply Hierarchical Clustering
+Z = linkage(data, method='ward')
+
+# Step 4: Plot Dendrogram
+plt.figure(figsize=(8, 5))
+dendrogram(Z)
+plt.title("Hierarchical Clustering Dendrogram")
+plt.xlabel("Data Points")
+plt.ylabel("Distance")
+plt.show()
