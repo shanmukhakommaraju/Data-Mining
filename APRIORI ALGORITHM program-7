@@ -1,0 +1,50 @@
+# Apriori Algorithm - Detailed Implementation
+
+"""
+Apriori Algorithm:
+- Used for Association Rule Mining
+- Finds frequent itemsets in transactional data
+- Generates rules like: {Milk} → {Bread}
+
+Steps:
+1. Prepare Transaction Data
+2. Convert to Boolean Format
+3. Generate Frequent Itemsets
+4. Generate Association Rules
+"""
+
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Create Dataset (Transactions)
+data = pd.DataFrame({
+    'Milk':   [1, 1, 0, 1, 1, 0, 1],
+    'Bread':  [1, 1, 1, 0, 1, 1, 1],
+    'Butter': [0, 1, 1, 1, 1, 0, 1],
+    'Cheese': [1, 0, 1, 1, 1, 1, 0]
+})
+
+print("Original Transaction Data:\n")
+print(data)
+
+# Step 2: Convert to Boolean (True/False)
+data = data.astype(bool)
+
+print("\nBoolean Format Data:\n")
+print(data)
+
+# Step 3: Generate Frequent Itemsets
+frequent_itemsets = apriori(data, min_support=0.4, use_colnames=True)
+
+print("\nFrequent Itemsets:\n")
+print(frequent_itemsets)
+
+# Step 4: Generate Association Rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+
+print("\nAssociation Rules:\n")
+print(rules)
+
+# Step 5: Display Important Columns
+print("\nSelected Rule Metrics:\n")
+print(rules[['antecedents', 'consequents', 'support', 'confidence', 'lift']])
