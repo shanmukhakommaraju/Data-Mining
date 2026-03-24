@@ -1,0 +1,45 @@
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeClassifier, export_text
+
+# -------------------------
+# Step 1: Create Dataset
+# -------------------------
+data = pd.DataFrame({
+    'StudyHours': ['High', 'Low', 'Medium', 'High', 'Low'],
+    'Attendance': ['Good', 'Poor', 'Good', 'Poor', 'Good'],
+    'Assignment': ['Yes', 'No', 'Yes', 'Yes', 'No'],
+    'Result': ['Pass', 'Fail', 'Pass', 'Pass', 'Fail']
+})
+
+print("Original Data:\n", data)
+
+# -------------------------
+# Step 2: Encode Data
+# -------------------------
+le = LabelEncoder()
+
+for col in data.columns:
+    data[col] = le.fit_transform(data[col])
+
+print("\nEncoded Data:\n", data)
+
+# -------------------------
+# Step 3: Split Data
+# -------------------------
+X = data.drop('Result', axis=1)
+y = data['Result']
+
+# -------------------------
+# Step 4: Apply J48 (Decision Tree)
+# -------------------------
+model = DecisionTreeClassifier(criterion='entropy')  # like J48
+model.fit(X, y)
+
+# -------------------------
+# Step 5: Generate Rules
+# -------------------------
+rules = export_text(model, feature_names=list(X.columns))
+
+print("\nDecision Tree Rules:\n")
+print(rules)
